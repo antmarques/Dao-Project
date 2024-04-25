@@ -6,6 +6,7 @@ import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Objects;
 
 public class SellerEntity implements Serializable {
@@ -99,9 +100,8 @@ public class SellerEntity implements Serializable {
 
     @Override
     public String toString() {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         return id + " - " + name + " - " + email + "\n" +
-                sdf.format(birthDate) + " - " + NumberFormat.getCurrencyInstance().format(baseSalary)  + "\n"
+                DateFormat.getDateInstance(DateFormat.SHORT).format(birthDate) + " - " + NumberFormat.getCurrencyInstance().format(baseSalary)  + "\n"
                 + "Department: " + department;
     }
 }
