@@ -100,7 +100,7 @@ public class SellerEntity implements Serializable {
 
     @Override
     public String toString() {
-        return id + " - " + name + " - " + email + "\n" +
+        return "Seller data:\n" + id + " - " + name + " - " + email + "\n" +
                 DateFormat.getDateInstance(DateFormat.SHORT).format(birthDate) + " - " + NumberFormat.getCurrencyInstance().format(baseSalary)  + "\n"
                 + "Department: " + department;
     }
