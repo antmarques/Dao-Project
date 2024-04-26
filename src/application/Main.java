@@ -21,5 +21,9 @@ public class Main {
         DepartmentEntity de = new DepartmentEntity(1, null);
         List<SellerEntity> list = sellerDao.findByDepartment(de);
         list.forEach(System.out::println);
+
+        System.out.println("=== TEST 3: seller findAll ===");
+        list = sellerDao.findAll();
+        list.forEach(System.out::println);
     }
 }
