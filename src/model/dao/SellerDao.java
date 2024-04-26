@@ -17,4 +17,6 @@ public interface SellerDao {
 
     List<SellerEntity> findAll();
 
+    List<SellerEntity> findByDepartment(DepartmentEntity department);
+
 }
