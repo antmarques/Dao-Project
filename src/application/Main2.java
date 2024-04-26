@@ -5,9 +5,12 @@ import model.dao.DepartmentDao;
 import model.entities.DepartmentEntity;
 
 import java.util.List;
+import java.util.Locale;
 
 public class Main2 {
     public static void main(String[] args) {
+        //Test DepartmentDao!
+
         Locale.setDefault(Locale.of("pt" , "BR"));
         DepartmentDao departmentDao = DaoFactory.createDepartmentDao();
 
@@ -22,12 +25,10 @@ public class Main2 {
         System.out.println("=== TEST 4: department Insert ===");
         DepartmentEntity newDepartment = new DepartmentEntity(null, "Music");
         departmentDao.insert(newDepartment);
-        System.out.println("Inserted! New id = " + newDepartment.getId());
 
         System.out.println("=== TEST 5: department Update ===");
         department = departmentDao.findById(1);
         department.setName("Marta Wayne");
-        department.setEmail("marta@gamil.com");
         departmentDao.update(department);
     }
 }
