@@ -7,10 +7,7 @@ import model.dao.SellerDao;
 import model.entities.DepartmentEntity;
 import model.entities.SellerEntity;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,7 +23,39 @@ public class SellerDaoJDBC implements SellerDao {
 
     @Override
     public void insert(SellerEntity seller) {
+        PreparedStatement ps = null;
+        try {
+            conn.setAutoCommit(false);
+            ps = conn.prepareStatement(
+                    "INSERT INTO seller "
+                    + "(name, email, birthdate, basesalary, id_department) "
+                    + "VALUES "
+                    + "(?, ?, ?, ?, ?);", Statement.RETURN_GENERATED_KEYS);
+            ps.setString(1, seller.getName());
+            ps.setString(2, seller.getEmail());
+            ps.setDate(3, new java.sql.Date(seller.getBirthDate().getTime()));
+            ps.setDouble(4, seller.getBaseSalary());
+            ps.setInt(5, seller.getDepartment().getId());
 
+            var rownsAffected = ps.executeUpdate();
+
+            if (rownsAffected > 0) {
+                ResultSet rs = ps.getGeneratedKeys();
+                if (rs.next()) {
+                    int id = rs.getInt(1);
+                    seller.setId(id);
+                    conn.commit();
+                }
+                DB.closeResultSet(rs);
+            } else {
+                conn.rollback();
+                throw new DbExeption("Unexpected error! No rowns affected!");
+            }
+        } catch (SQLException e) {
+            throw new DbExeption("SQL Error: " + e.getMessage());
+        } finally {
+            DB.closeStatement(ps);
+        }
     }
 
     @Override
