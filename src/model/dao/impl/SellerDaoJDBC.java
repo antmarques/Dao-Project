@@ -42,9 +42,9 @@ public class SellerDaoJDBC implements SellerDao {
             if (rownsAffected > 0) {
                 ResultSet rs = ps.getGeneratedKeys();
                 if (rs.next()) {
-                    int id = rs.getInt(1);
-                    seller.setId(id);
+                    seller.setId(rs.getInt(1));
                     conn.commit();
+                    System.out.println("Id created: " + seller.getId());
                 }
                 DB.closeResultSet(rs);
             } else {
@@ -74,6 +74,7 @@ public class SellerDaoJDBC implements SellerDao {
             ps.setInt(6, seller.getId());
 
             ps.executeUpdate();
+            System.out.println("Seller updated");
         } catch (SQLException e) {
             throw new DbExeption("SQL Error: " + e.getMessage());
         } finally {
@@ -84,28 +85,21 @@ public class SellerDaoJDBC implements SellerDao {
     @Override
     public void deleteById(Integer id) {
         PreparedStatement ps = null;
-        ResultSet rs = null;
-
         try {
             conn.setAutoCommit(false);
-            ps = conn.prepareStatement(
-              "DELETE FROM seller "
-              + "WHERE id = ?;"
-            );
+            ps = conn.prepareStatement("DELETE FROM seller WHERE id = ?;");
             ps.setInt(1, id);
 
             int rowsAffected = ps.executeUpdate();
-            if (rowsAffected > 0) {
-                conn.commit();
-            } else {
+            if (rowsAffected <= 0) {
                 conn.rollback();
+                throw new DbExeption("Id is null");
             }
-
+            conn.commit();
             System.out.println("Rows affected: " + rowsAffected);
         } catch (SQLException e) {
             throw new DbIntegrityException("SQL Integrity Error: " + e.getMessage());
         } finally {
-            DB.closeResultSet(rs);
             DB.closeStatement(ps);
         }
     }
@@ -114,7 +108,6 @@ public class SellerDaoJDBC implements SellerDao {
     public SellerEntity findById(Integer id) {
         PreparedStatement ps = null;
         ResultSet rs = null;
-
         try {
             ps = conn.prepareStatement(
                     "SELECT seller.*, department.Name as DepName "
@@ -142,7 +135,6 @@ public class SellerDaoJDBC implements SellerDao {
     public List<SellerEntity> findAll() {
         PreparedStatement ps = null;
         ResultSet rs = null;
-
         try {
             ps = conn.prepareStatement(
                     "SELECT seller.*, department.Name as DepName "
@@ -171,7 +163,6 @@ public class SellerDaoJDBC implements SellerDao {
     public List<SellerEntity> findByDepartment(DepartmentEntity department) {
         PreparedStatement ps = null;
         ResultSet rs = null;
-
         try {
             ps = conn.prepareStatement(
                     "SELECT seller.*,department.Name as DepName "

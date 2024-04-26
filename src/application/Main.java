@@ -1,42 +1,18 @@
 package application;
 
 import model.dao.DaoFactory;
-import model.dao.SellerDao;
+import model.dao.DepartmentDao;
 import model.entities.DepartmentEntity;
-import model.entities.SellerEntity;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
 public class Main {
     public static void main(String[] args) {
         Locale.setDefault(Locale.of("pt" , "BR"));
-        SellerDao sellerDao = DaoFactory.createSellerDao();
+        DepartmentDao departmentDao = DaoFactory.createDepartmentDao();
 
-        System.out.println("=== TEST 1: seller findById ===");
-        SellerEntity seller = sellerDao.findById(2);
-        System.out.println(seller);
-
-        System.out.println("=== TEST 2: seller findByDepartment ===");
-        DepartmentEntity de = new DepartmentEntity(1, null);
-        List<SellerEntity> list = sellerDao.findByDepartment(de);
+        List<DepartmentEntity> list = departmentDao.findAll();
         list.forEach(System.out::println);
-
-        System.out.println("=== TEST 3: seller findAll ===");
-        list = sellerDao.findAll();
-        list.forEach(System.out::println);
-
-/*        System.out.println("=== TEST 4: seller Insert ===");
-        SellerEntity newSeller = new SellerEntity(null, "Greg", "greg@gmail.com", new Date(), 4000.0, de);
-        sellerDao.insert(newSeller);
-        System.out.println("Inserted! New id = " + newSeller.getId());*/
-
-        System.out.println("=== TEST 5: seller Update ===");
-        seller = sellerDao.findById(1);
-        seller.setName("Marta Wayne");
-        seller.setEmail("marta@gamil.com");
-        sellerDao.update(seller);
-        System.out.println("Update completed");
     }
 }
